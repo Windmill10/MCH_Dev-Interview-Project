@@ -22,6 +22,53 @@
 
 <script>
 // TODO: Fetch websites data from API
+import axios from 'axios'
+
+export default {
+  data() {
+    return {
+      websites: []
+    }
+  },
+  mounted() {
+    this.fetch()
+  },
+
+  methods: {
+    async fetch() {
+      try {
+        const requests = Array.from({ length: 6 }, (_, i) =>
+            axios.get(`https://mch-dev.userwei.com/api/websites/${i + 1}`)
+        )
+
+        const responses = await Promise.all(requests)
+        this.websites = responses.map(response => response.data)
+        //this.loading = false
+      } catch (error) {
+        console.error('Error fetching websites:', error)
+       // this.loading = false
+      }
+    }
+  }
+
+}
+// hard-coded version
+// export default{
+//   data() {
+//     return {
+//       websites: [
+//         {
+//           id: 1,
+//           name: "2024 梅竹黑客松",
+//           description: "2024/10/19 - 2024/10/20",
+//           image_url: "https://mch-dev.userwei.com/resource/images/website1.webp",
+//           link: "https://2024.meichuhackathon.org/"
+//         },
+//       ]
+//     }
+//   },
+//
+// }
 </script>
 
 <style scoped>
@@ -40,6 +87,9 @@
 
 .websites-grid {
   /* TODO: Add styles for a responsive grid layout */
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 .website-card {
